@@ -1,0 +1,50 @@
+.grid {
+    display: flex;
+    text-align: left;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.state {
+    white-space: pre-line;
+    border: 1px solid darkgray;
+    border-radius: 10px;
+    padding: 1rem 3rem;
+}
+
+.container {
+    text-align: center;
+}
+
+.copyButton {
+    font-size: medium;
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    position: relative;
+    display: inline-block;
+}
+
+.copyButton:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.copyButtonTooltip {
+    visibility: hidden;
+    width: 6rem;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: .4rem 0;
+    opacity: 0.7;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -3rem;
+}
