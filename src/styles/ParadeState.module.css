@@ -17,21 +17,9 @@
 }
 
 .copyButton {
-    font-size: medium;
     color: #fff;
     background-color: #28a745;
     border-color: #28a745;
-    border: 1px solid transparent;
-    padding: .375rem .75rem;
-    line-height: 1.5;
-    border-radius: .25rem;
-    position: relative;
-    display: inline-block;
-}
-
-.copyButton:hover {
-    opacity: 0.8;
-    cursor: pointer;
 }
 
 .copyButtonTooltip {
@@ -47,4 +35,18 @@
     bottom: 100%;
     left: 50%;
     margin-left: -3rem;
+}
+
+.whatsappButton {
+    background-color: #198754;
+    border-color: #198754;
+}
+
+.phoneButton {
+    background-color: #0d6efd;
+    border-color: #28a745;
+}
+
+.icon {
+    filter: invert(1);
 }

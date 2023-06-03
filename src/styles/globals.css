@@ -14,3 +14,18 @@ a {
 * {
   box-sizing: border-box;
 }
+
+button {
+  font-size: medium;
+  border: 1px solid transparent;
+  padding: .375rem .75rem;
+  line-height: 1.5;
+  border-radius: .25rem;
+  position: relative;
+  display: inline-block;
+}
+
+button:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}

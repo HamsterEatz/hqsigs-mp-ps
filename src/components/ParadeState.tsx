@@ -2,6 +2,9 @@ import styles from '../styles/ParadeState.module.css';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import Modal from './Modal';
+import Image from 'next/image';
+import whatsappSvg from '../public/whatsapp.svg';
+import phoneSvg from '../public/phone.svg';
 
 export default function ParadeState({ isFirstParade, data, error }) {
     const [showModal, setShowModal] = useState(false);
@@ -14,6 +17,9 @@ export default function ParadeState({ isFirstParade, data, error }) {
             copyButton!!.style.visibility = 'visible';
             navigator.clipboard.writeText(info);
             window.setTimeout(() => copyButton!!.style.visibility = 'hidden', 2000);
+            if (data.unaccounted.length > 0) {
+                setShowModal(true);
+            }
         }
     }
     useEffect(() => {
@@ -22,7 +28,7 @@ export default function ParadeState({ isFirstParade, data, error }) {
         }
     }, [data]);
 
-    function setInfoFromData(data: { present, absent, unaccounted }) {
+    async function setInfoFromData(data: { present, absent, unaccounted }) {
         const { present, absent, unaccounted } = data;
         const now = moment();
         let info = `*${now.format('DD/MM/YY')} ${isFirstParade ? 'First' : 'Last'} Parade - Manpower Br*\n\n*Present*:`;
@@ -39,7 +45,9 @@ export default function ParadeState({ isFirstParade, data, error }) {
             setShowModal(true);
             info += '\n\n*Unaccounted*:';
             for (let i = 0; i < unaccounted.length; i++) {
-                info += `\n${i + 1}) ${unaccounted[i].rank} ${unaccounted[i].name}`;
+                const rank = unaccounted[i].rank;
+                const name = unaccounted[i].name;
+                info += `\n${i + 1}) ${rank} ${name}`;
             }
         }
 
@@ -48,9 +56,20 @@ export default function ParadeState({ isFirstParade, data, error }) {
     return (
         <div className={styles.container}>
             <div>
-                {false && // TODO: Add contacts to unaccounted
+                {showModal &&
                     <Modal title={<b style={{ color: '#dc3545' }}>Unaccounted Detected!</b>} onClose={() => setShowModal(false)}>
-                        Hello from the modal!
+                        {data.unaccounted.map(({ rank, name, contact }, i) => (
+                            <p key={i}>{i + 1}) {rank} {name} ({contact})
+                                <a style={{ margin: '0 1rem' }} href={`tel:65${contact}`}>
+                                    <button className={styles.phoneButton} type="button">
+                                        <Image className={styles.icon} alt="phone" src={phoneSvg} width={10} height={10} />
+                                    </button>
+                                </a>
+                                <button className={styles.whatsappButton} type="button" onClick={() => window.open(`https://wa.me/65${contact}`, '_blank')}>
+                                    <Image className={styles.icon} alt="whatsapp" src={whatsappSvg} width={10} height={10} />
+                                </button>
+                            </p>
+                        ))}
                     </Modal>
                 }
             </div>

@@ -1,6 +1,8 @@
 .modalWrapper {
-    width: 500px;
-    height: 500px;
+    width: 50%;
+    min-height: 80%;
+    height: max-content;
+    padding-bottom: 5%;
 }
 
 .modal {
@@ -27,11 +29,25 @@
 }
 
 .modalBody {
-    padding-top: 10px;
+    padding-left: 1rem;
+    padding-top: .5rem;
+    padding-bottom: 1.5rem;
 }
 
 .modalHeader {
+    margin: 0 1rem;
     display: flex;
     justify-content: space-between;
     border-bottom: 1px solid lightgray;
+}
+
+.crossButton {
+    padding-right: 1rem;
+    background-color: transparent;
+    border: 0;
+    font-size: 1.5rem;
+}
+
+.crossButton:hover {
+    cursor: pointer;
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import ParadeState from '../../components/ParadeState';
-import paradeStateApi from '../../apis/paradeStateApi';
+import { paradeStateApi } from '../../apis';
 
 export async function getServerSideProps({ query }) {
     try {
