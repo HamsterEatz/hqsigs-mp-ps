@@ -15,5 +15,5 @@ export default async function contactsApi() {
         rank: value[0],
         name: value[1],
         contact: value[2]
-    }))
+    }));
 }
