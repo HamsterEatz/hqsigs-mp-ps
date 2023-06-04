@@ -8,7 +8,7 @@ This project aims to simplify the workflow for POCs, when tasked to submit parad
 
 #### Documentation
 
-> # `TO BE UPDATED!`
+> # Currently live at: https://hqsigs-mp-ps.vercel.app/
 
 #### Development
 The webpage is created using TypeScript Next.js and googleapis.
