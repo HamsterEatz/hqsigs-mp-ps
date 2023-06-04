@@ -25,9 +25,9 @@ function MyApp({ Component, pageProps }) {
 
       <footer className={styles.footer}>
         <div className={styles.footerItems}>
-          <a className={styles.github} href="https://github.com/HamsterEatz/MP-PS" target="_blank" rel="noreferrer">
+          <a className={styles.github} href="https://github.com/HamsterEatz/hqsigs-mp-ps" target="_blank" rel="noreferrer">
             <Image alt="github" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" width={32} height={32} />
-            <span style={{ paddingLeft: 10 }}>https://github.com/HamsterEatz/MP-PS</span>
+            <span style={{ paddingLeft: 10 }}>https://github.com/HamsterEatz/hqsigs-mp-ps</span>
           </a>
           <p style={{ paddingLeft: '10%' }}>A open source project created by Nelson</p>
           <p style={{ paddingLeft: '10%' }}>MP-PS v1.0.0</p>
