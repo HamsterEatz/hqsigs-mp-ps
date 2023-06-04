@@ -4,6 +4,7 @@ import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import Image from 'next/image';
 import moment from 'moment-timezone';
+import pjson from '../../package.json';
 
 moment.tz.setDefault('Asia/Singapore');
 
@@ -30,7 +31,7 @@ function MyApp({ Component, pageProps }) {
             <span style={{ paddingLeft: 10 }}>https://github.com/HamsterEatz/hqsigs-mp-ps</span>
           </a>
           <p style={{ paddingLeft: '10%' }}>A open source project created by Nelson</p>
-          <p style={{ paddingLeft: '10%' }}>MP-PS v1.0.0</p>
+          <p style={{ paddingLeft: '10%' }}>MP-PS {pjson.version}</p>
         </div>
       </footer>
     </div>
