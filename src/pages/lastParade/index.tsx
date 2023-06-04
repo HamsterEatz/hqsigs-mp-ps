@@ -3,11 +3,19 @@ import ParadeState from '../../components/ParadeState';
 import { paradeStateApi } from '../../apis';
 
 export async function getServerSideProps({ query }) {
-    return {
-        props: {
-            data: await paradeStateApi(false)
-        },
-    };
+    try {
+        return {
+            props: {
+                data: await paradeStateApi(false)
+            },
+        };
+    } catch (e) {
+        return {
+            props: {
+                error: e.message
+            }
+        }
+    }
 }
 
 export default function FirstParade({ data, error }) {

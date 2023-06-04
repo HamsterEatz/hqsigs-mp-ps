@@ -2,7 +2,7 @@
   padding: .1rem 0;
   padding-bottom: 12%;
   align-items: center;
-  min-height: 70vh;
+  min-height: 80vh;
 }
 
 .header {
@@ -78,4 +78,10 @@
   margin: 0;
   font-size: 1.25rem;
   line-height: 1.5;
+}
+
+@media (max-width: 480px) {
+  .footerItems {
+    display: block;
+  }
 }
