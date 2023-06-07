@@ -5,6 +5,8 @@ import Modal from './Modal';
 import Image from 'next/image';
 import whatsappSvg from '../public/whatsapp.svg';
 import phoneSvg from '../public/phone.svg';
+import { useRouter } from 'next/router';
+import { promptPassword } from '../constants';
 
 export default function ParadeState({ isFirstParade, data, error }) {
     const [showModal, setShowModal] = useState(false);
@@ -53,6 +55,10 @@ export default function ParadeState({ isFirstParade, data, error }) {
 
         setInfo(info);
     }
+    const router = useRouter();
+    function onLockButtonClick() {
+        return promptPassword(() => router.push(`../lockStatus/toggle?password=${process.env.ADMIN_PASSWORD}`))
+    }
     return (
         <div className={styles.container}>
             <div>
@@ -73,7 +79,12 @@ export default function ParadeState({ isFirstParade, data, error }) {
                     </Modal>
                 }
             </div>
-            <h2>{isFirstParade ? 'First' : 'Last'} Parade State: {!error && <button onClick={copyParadeState} className={styles.copyButton} type="button">Copy<span id="copyToClipboardTooltip" className={styles.copyButtonTooltip}>Copied!</span></button>}</h2>
+            <h2>{isFirstParade ? 'First' : 'Last'} Parade State: {!error &&
+                <button onClick={copyParadeState} className={styles.copyButton} type="button">Copy
+                    <span id="copyToClipboardTooltip" className={styles.copyButtonTooltip}>Copied!</span>
+                </button>}
+                {isFirstParade && !data.isLocked && <button className={styles.lockButton} onClick={onLockButtonClick}>Lock</button>}
+            </h2>
             <div className={styles.grid}>
                 <span className={styles.state}>
                     {error ? error : info}

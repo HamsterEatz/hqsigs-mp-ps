@@ -37,6 +37,12 @@
     margin-left: -3rem;
 }
 
+.lockButton {
+    margin-left: .4rem;
+    background-color: #dc3545;
+    color: white;
+}
+
 .whatsappButton {
     background-color: #198754;
     border-color: #198754;

@@ -1,12 +1,12 @@
 import React from 'react';
 import ParadeState from '../../components/ParadeState';
-import { paradeStateApi } from '../../apis';
+import { lockDataApi, paradeStateApi } from '../../apis';
 
 export async function getServerSideProps({ query }) {
     try {
         return {
             props: {
-                data: await paradeStateApi(true)
+                data: { ...await paradeStateApi(true), isLocked: await lockDataApi(true) }
             },
         };
     } catch (e) {
