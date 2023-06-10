@@ -4,10 +4,9 @@ import moment from "moment";
 import clearDataApi from "./clearDataApi";
 import { SHEET } from "../constants";
 
-export default async function setNewWeekApi() {
+export default async function setNewWeekApi(now: moment.Moment = moment()) {
     try {
         const spreadsheetId = process.env.GOOGLE_SHEET_ID;
-        const now = moment();
 
         let start: moment.Moment;
         // If Sunday, use same week
