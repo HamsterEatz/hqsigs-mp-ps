@@ -1,5 +1,6 @@
 import { google } from "googleapis";
 import gapiAuth from "./gapiAuth";
+import { SHEET } from "../constants";
 
 export default async function fetchAndOrToggleLockDataApi(fetchOnly = true) {
     const sheets = google.sheets({ version: 'v4', auth: gapiAuth() });
@@ -17,7 +18,7 @@ export default async function fetchAndOrToggleLockDataApi(fetchOnly = true) {
     let protectedRangeId;
     const rangeDescription = 'Disable edit';
     for (const sheet of currSheets || []) {
-        if (sheet.properties?.title === 'Parade State (1)') {
+        if (sheet.properties?.title === SHEET.PARADE_STATE) {
             sheetId = sheet.properties.sheetId;
             for (const range of sheet.protectedRanges || []) {
                 if (range.description === rangeDescription) {

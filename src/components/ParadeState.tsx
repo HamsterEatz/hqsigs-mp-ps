@@ -83,7 +83,7 @@ export default function ParadeState({ isFirstParade, data, error }) {
                 <button onClick={copyParadeState} className={styles.copyButton} type="button">Copy
                     <span id="copyToClipboardTooltip" className={styles.copyButtonTooltip}>Copied!</span>
                 </button>}
-                {isFirstParade && !data.isLocked && <button className={styles.lockButton} onClick={onLockButtonClick}>Lock</button>}
+                {isFirstParade && data && !data.isLocked && <button className={styles.lockButton} onClick={onLockButtonClick}>Lock</button>}
             </h2>
             <div className={styles.grid}>
                 <span className={styles.state}>

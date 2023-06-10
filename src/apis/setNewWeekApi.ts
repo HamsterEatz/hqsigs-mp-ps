@@ -2,6 +2,7 @@ import { google } from "googleapis";
 import gapiAuth from "./gapiAuth";
 import moment from "moment";
 import clearDataApi from "./clearDataApi";
+import { SHEET } from "../constants";
 
 export default async function setNewWeekApi() {
     try {
@@ -21,7 +22,7 @@ export default async function setNewWeekApi() {
         // Check based on the current start date, if the date range is already updated
         const currentStartDateResponse = await sheets.spreadsheets.values.get({
             spreadsheetId,
-            range: 'Parade State (1)!D2',
+            range: `${SHEET.PARADE_STATE}!D2`,
         });
         const currentStartDateString = currentStartDateResponse.data.values!![0][0];
         const currentStartDate = moment(currentStartDateString).year(start.year());
@@ -42,25 +43,26 @@ export default async function setNewWeekApi() {
 
         const remarksResponse = await sheets.spreadsheets.values.get({
             spreadsheetId,
-            range: 'Parade State (1)!N4:N',
+            range: `${SHEET.PARADE_STATE}!N4:N`,
         });
 
         const remarks: any[] = remarksResponse.data.values!!;
         const dataToAppend: any[] = [];
+        start.add(1, 'day');
         for (let i = 0; i < remarks.length; i++) {
             const remark = remarks[i][0];
             if (remark && remark.includes('from')) {
                 const dateRange = remark.split("from ")[1];
                 const splittedDates = dateRange.split("-");
                 const endDate = moment(splittedDates[1], 'DD/MM');
-                if (endDate.isSameOrAfter(start)) {
+                if (endDate.isSameOrAfter(start, 'days')) {
                     let numOfColToAppend = (endDate.diff(start, 'days') + 1) * 2;
                     numOfColToAppend = numOfColToAppend <= 10 ? numOfColToAppend : 10;
                     const remarksArr: any[] = [];
                     for (let y = 0; y < numOfColToAppend; y++) {
                         remarksArr.push(remark);
                     }
-                    dataToAppend.push({ range: `Parade State (1)!R${4 + i}C4:R${4 + i}C${3 + numOfColToAppend}`, values: [remarksArr] });
+                    dataToAppend.push({ range: `${SHEET.PARADE_STATE}!R${4 + i}C4:R${4 + i}C${3 + numOfColToAppend}`, values: [remarksArr] });
                 }
             }
         }
@@ -70,7 +72,7 @@ export default async function setNewWeekApi() {
             requestBody: {
                 valueInputOption: 'USER_ENTERED', data: [
                     {
-                        range: 'Parade State (1)!D2:M2',
+                        range: `${SHEET.PARADE_STATE}!D2:M2`,
                         values: [datesArr]
                     },
                     ...dataToAppend

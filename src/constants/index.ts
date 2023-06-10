@@ -21,3 +21,8 @@ export const LEGENDS = {
         OFF: 'OFF'
     },
 }
+
+export const SHEET = {
+    PARADE_STATE: 'Parade State (1)',
+    CONTACT_LIST: 'Contact List'
+}

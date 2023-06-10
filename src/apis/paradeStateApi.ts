@@ -2,7 +2,7 @@ import moment from "moment";
 import { google } from 'googleapis';
 import gapiAuth from "./gapiAuth";
 import contactsApi from "./contactsApi";
-import { LEGENDS } from "../constants";
+import { LEGENDS, SHEET } from "../constants";
 
 export default async function paradeStateApi(isFirstParade) {
     const now = moment();
@@ -15,7 +15,7 @@ export default async function paradeStateApi(isFirstParade) {
 
     const response = await sheets.spreadsheets.values.get({
         spreadsheetId: process.env.GOOGLE_SHEET_ID,
-        range: 'Parade State (1)!A4:N',
+        range: `${SHEET.PARADE_STATE}!A4:N`,
     });
 
     const values = response.data.values || [];
@@ -102,7 +102,7 @@ async function filterData({ now, isFirstParade, values }) {
                         continue;
                     }
 
-                    absent.push()
+                    absent.push({ rank, name, state });
                 }
             } else {
                 let contact = '';
