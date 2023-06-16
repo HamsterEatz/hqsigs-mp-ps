@@ -33,3 +33,8 @@ export enum SHEET_TYPE {
     PARADE_STATE = 'PARADE STATE',
     SNAPSHOT = 'SNAPSHOT'
 }
+
+export enum DOC_ALIGNMENT {
+    CENTER = 'CENTER',
+    END = 'END'
+}
