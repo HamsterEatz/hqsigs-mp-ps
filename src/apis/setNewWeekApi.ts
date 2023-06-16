@@ -2,7 +2,7 @@ import { google } from "googleapis";
 import gapiAuth from "./gapiAuth";
 import moment from "moment";
 import clearDataApi from "./clearDataApi";
-import { SHEET } from "../constants";
+import { SHEET, SHEET_TYPE } from "../constants";
 
 export default async function setNewWeekApi(now: moment.Moment = moment()) {
     try {
@@ -30,7 +30,7 @@ export default async function setNewWeekApi(now: moment.Moment = moment()) {
             return 'Sheet has already been updated!';
         }
 
-        await clearDataApi();
+        await clearDataApi(SHEET_TYPE.PARADE_STATE);
 
         const startToEnd = start.clone();
         const datesArr: string[] = [];
@@ -47,6 +47,7 @@ export default async function setNewWeekApi(now: moment.Moment = moment()) {
 
         const remarks: any[] = remarksResponse.data.values!!;
         const dataToAppend: any[] = [];
+        const remarksCellToClear: string[] = [];
         start.add(1, 'day');
         for (let i = 0; i < remarks.length; i++) {
             const remark = remarks[i][0];
@@ -62,6 +63,8 @@ export default async function setNewWeekApi(now: moment.Moment = moment()) {
                         remarksArr.push(remark);
                     }
                     dataToAppend.push({ range: `${SHEET.PARADE_STATE}!R${4 + i}C4:R${4 + i}C${3 + numOfColToAppend}`, values: [remarksArr] });
+                } else {
+                    remarksCellToClear.push(`${SHEET.PARADE_STATE}!N${4 + i}`);
                 }
             }
         }
@@ -78,6 +81,15 @@ export default async function setNewWeekApi(now: moment.Moment = moment()) {
                 ]
             }
         });
+
+        await sheets.spreadsheets.values.batchClear({
+            spreadsheetId,
+            requestBody: {
+                ranges: remarksCellToClear
+            }
+        });
+
+        // TODO: Check via Google Calendars API to highlight in yellow if public holiday or there are any events
 
         return 'Sheet has been updated!';
     } catch (e) {

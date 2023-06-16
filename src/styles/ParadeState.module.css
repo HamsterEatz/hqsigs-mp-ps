@@ -43,6 +43,12 @@
     color: white;
 }
 
+.snapshotButton {
+    margin-left: .4rem;
+    background-color: #ffc107;
+    color: black;
+}
+
 .whatsappButton {
     background-color: #198754;
     border-color: #198754;

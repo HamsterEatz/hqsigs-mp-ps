@@ -30,7 +30,7 @@ function MyApp({ Component, pageProps }) {
             <Image alt="github" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" width={32} height={32} />
             <span style={{ paddingLeft: 10 }}>https://github.com/HamsterEatz/hqsigs-mp-ps</span>
           </a>
-          <p style={{ paddingLeft: '10%' }}>A open source project created by Nelson</p>
+          <p style={{ paddingLeft: '10%' }}>An open source project created by Nelson</p>
           <p style={{ paddingLeft: '10%' }}>MP-PS v{pjson.version}</p>
         </div>
       </footer>

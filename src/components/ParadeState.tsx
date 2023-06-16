@@ -7,6 +7,7 @@ import whatsappSvg from '../public/whatsapp.svg';
 import phoneSvg from '../public/phone.svg';
 import { useRouter } from 'next/router';
 import { promptPassword } from '../constants';
+import Link from 'next/link';
 
 export default function ParadeState({ isFirstParade, data, error }) {
     const [showModal, setShowModal] = useState(false);
@@ -30,7 +31,7 @@ export default function ParadeState({ isFirstParade, data, error }) {
         }
     }, [data]);
 
-    async function setInfoFromData(data: { present, absent, unaccounted }) {
+    async function setInfoFromData(data: { diffArr, present, absent, unaccounted }) {
         const { present, absent, unaccounted } = data;
         const now = moment();
         let info = `*${now.format('DD/MM/YY')} ${isFirstParade ? 'First' : 'Last'} Parade - Manpower Br*\n\n*Present*:`;
@@ -59,6 +60,7 @@ export default function ParadeState({ isFirstParade, data, error }) {
     function onLockButtonClick() {
         return promptPassword(() => router.push(`../lockStatus/toggle?password=${process.env.ADMIN_PASSWORD}`))
     }
+
     return (
         <div className={styles.container}>
             <div>
@@ -80,14 +82,29 @@ export default function ParadeState({ isFirstParade, data, error }) {
                 }
             </div>
             <h2>{isFirstParade ? 'First' : 'Last'} Parade State: {!error &&
-                <button onClick={copyParadeState} className={styles.copyButton} type="button">Copy
-                    <span id="copyToClipboardTooltip" className={styles.copyButtonTooltip}>Copied!</span>
-                </button>}
+                <>
+                    <button onClick={copyParadeState} className={styles.copyButton} type="button">Copy
+                        <span id="copyToClipboardTooltip" className={styles.copyButtonTooltip}>Copied!</span>
+                    </button>
+                    <Link href={router.asPath + '/snapshot'}><button className={styles.snapshotButton}>Snapshot</button></Link>
+                </>}
                 {isFirstParade && data && !data.isLocked && <button className={styles.lockButton} onClick={onLockButtonClick}>Lock</button>}
             </h2>
             <div className={styles.grid}>
                 <span className={styles.state}>
-                    {error ? error : info}
+                    {error ? error : <>
+                        {data.diffArr.length > 0 && <>
+                            <h4 style={{color: 'darkred'}}><b>Detected changes from snapshot:</b></h4>
+                            {data.diffArr.map(({ name, rank, oldState, newState }, i) => {
+                                return (<p key={i}>
+                                    {i + 1}) {rank} {name} [{oldState} → {newState}]
+                                </p>);
+                            })}
+                            <hr />
+                            <br />
+                        </>}
+                        <>{info}</>
+                    </>}
                 </span>
             </div>
         </div>

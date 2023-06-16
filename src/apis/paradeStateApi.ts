@@ -4,8 +4,7 @@ import gapiAuth from "./gapiAuth";
 import contactsApi from "./contactsApi";
 import { LEGENDS, SHEET } from "../constants";
 
-export default async function paradeStateApi(isFirstParade) {
-    const now = moment();
+export default async function paradeStateApi(isFirstParade, now: moment.Moment = moment()) {
     const currentDay = now.day();
     if (currentDay === 0 || currentDay === 6) {
         throw new Error('Parade State not available on weekends!');
@@ -19,7 +18,6 @@ export default async function paradeStateApi(isFirstParade) {
     });
 
     const values = response.data.values || [];
-
 
     return filterData({ now, isFirstParade, values });
 }
@@ -68,13 +66,13 @@ async function filterData({ now, isFirstParade, values }) {
                     // Calculate duration
                     let hasDuration = false;
                     for (const legend of Object.values(LEGENDS.ABSENT)) {
-                        if (state.toUpperCase().includes(legend)) {
+                        if (state.toUpperCase() === legend) {
                             let daysToSubtractToStartDate = 0;
                             let daysToAddToEndDate = 0;
 
                             // Calculate startDate
                             for (let y = currentDay * 2 + (isFirstParade ? 0 : 1); y > 2; y--) {
-                                if (value[y] !== legend) {
+                                if (!value[y] || value[y].trim().toUpperCase() !== legend || y === 3) {
                                     const startDay = Math.floor(y / 2);
                                     daysToSubtractToStartDate = currentDay - startDay;
                                     break;
@@ -83,7 +81,7 @@ async function filterData({ now, isFirstParade, values }) {
 
                             // Calculate endDate
                             for (let y = currentDay * 2 + (isFirstParade ? 2 : 3); y < 13; y++) {
-                                if (!value[y] || value[y] !== legend) {
+                                if (!value[y] || value[y].trim().toUpperCase() !== legend || y === 12) {
                                     const endDay = Math.floor((y - 2) / 2);
                                     daysToAddToEndDate = endDay - currentDay;
                                     break;
