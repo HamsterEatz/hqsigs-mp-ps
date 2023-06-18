@@ -1,12 +1,3 @@
-export function promptPassword(onSuccess) {
-    const adminPassword = process.env.ADMIN_PASSWORD;
-    const passwordInput = prompt('Enter admin password');
-    if (passwordInput === adminPassword) {
-        return onSuccess();
-    }
-    return alert('Access denied!');
-}
-
 export const LEGENDS = {
     PRESENT: 'PRESENT',
     ABSENT: {
@@ -37,4 +28,32 @@ export enum SHEET_TYPE {
 export enum DOC_ALIGNMENT {
     CENTER = 'CENTER',
     END = 'END'
+}
+
+export const ENV = {
+    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
+    SPREADSHEET_ID: process.env.GOOGLE_SHEET_ID,
+    DOCUMENT_ID: process.env.GOOGLE_DOCS_ID,
+    CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    CLIENT_EMAIL: process.env.GOOGLE_CLIENT_EMAIL,
+    PRIVATE_KEY: process.env.GOOGLE_PRIVATE_KEY,
+    OPS_EMAIL: process.env.GOOGLE_OP_EMAILS
+}
+
+export function promptPassword(onSuccess) {
+    const adminPassword = ENV.ADMIN_PASSWORD;
+    const passwordInput = prompt();
+    if (passwordInput === adminPassword) {
+        return onSuccess();
+    }
+    return alert('Access denied!');
+}
+
+export enum RANKS {
+    REC = 'REC',
+    PTE = 'PTE',
+    LCP = 'LCP',
+    CPL = 'CPL',
+    CFC = 'CFC',
+    THIRDSG = '3SG'
 }

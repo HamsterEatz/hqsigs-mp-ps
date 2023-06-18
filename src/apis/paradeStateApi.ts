@@ -1,8 +1,8 @@
 import moment from "moment";
 import { google } from 'googleapis';
 import gapiAuth from "./gapiAuth";
-import contactsApi from "./contactsApi";
-import { LEGENDS, SHEET } from "../constants";
+import getUsersApi from "./getUsersApi";
+import { ENV, LEGENDS, SHEET } from "../constants";
 
 export default async function paradeStateApi(isFirstParade, now: moment.Moment = moment()) {
     const currentDay = now.day();
@@ -13,8 +13,8 @@ export default async function paradeStateApi(isFirstParade, now: moment.Moment =
     const sheets = google.sheets({ version: 'v4', auth: gapiAuth() });
 
     const response = await sheets.spreadsheets.values.get({
-        spreadsheetId: process.env.GOOGLE_SHEET_ID,
-        range: `${SHEET.PARADE_STATE}!A4:N`,
+        spreadsheetId: ENV.SPREADSHEET_ID,
+        range: `${SHEET.PARADE_STATE}!A4:O`,
     });
 
     const values = response.data.values || [];
@@ -31,7 +31,7 @@ async function filterData({ now, isFirstParade, values }) {
         const rank = value[2];
         if (!isNaN(Number(value[0])) && name) {
             const currentDay = now.day();
-            const state = value[currentDay * 2 + (isFirstParade ? 1 : 2)]?.trim();
+            const state = value[currentDay * 2 + (isFirstParade ? 2 : 3)]?.trim();
             if (state) {
                 if (state.toUpperCase() === LEGENDS.PRESENT) {
                     present.push({ name, rank });
@@ -41,7 +41,7 @@ async function filterData({ now, isFirstParade, values }) {
                         continue;
                     }
 
-                    const remarks = value[13];
+                    const remarks = value[14];
                     if (remarks?.includes("from")) {
                         let isAppended = false;
                         for (const legend of Object.values(LEGENDS.ABSENT)) {
@@ -71,18 +71,18 @@ async function filterData({ now, isFirstParade, values }) {
                             let daysToAddToEndDate = 0;
 
                             // Calculate startDate
-                            for (let y = currentDay * 2 + (isFirstParade ? 0 : 1); y > 2; y--) {
-                                if (!value[y] || value[y].trim().toUpperCase() !== legend || y === 3) {
-                                    const startDay = Math.floor(y / 2);
+                            for (let y = currentDay * 2 + (isFirstParade ? 1 : 2); y > 3; y--) {
+                                if (!value[y] || value[y].trim().toUpperCase() !== legend || y === 4) {
+                                    const startDay = Math.floor((y - 1) / 2);
                                     daysToSubtractToStartDate = currentDay - startDay;
                                     break;
                                 }
                             }
 
                             // Calculate endDate
-                            for (let y = currentDay * 2 + (isFirstParade ? 2 : 3); y < 13; y++) {
-                                if (!value[y] || value[y].trim().toUpperCase() !== legend || y === 12) {
-                                    const endDay = Math.floor((y - 2) / 2);
+                            for (let y = currentDay * 2 + (isFirstParade ? 3 : 4); y < 14; y++) {
+                                if (!value[y] || value[y].trim().toUpperCase() !== legend || y === 13) {
+                                    const endDay = Math.floor((y - 3) / 2);
                                     daysToAddToEndDate = endDay - currentDay;
                                     break;
                                 }
@@ -104,7 +104,7 @@ async function filterData({ now, isFirstParade, values }) {
                 }
             } else {
                 let contact = '';
-                const contactList = await contactsApi();
+                const contactList = await getUsersApi();
                 for (const currentContact of contactList) {
                     if (currentContact.name === name && currentContact.rank === rank) {
                         contact = currentContact.contact;

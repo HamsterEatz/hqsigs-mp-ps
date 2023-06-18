@@ -2,11 +2,11 @@ import { google } from "googleapis";
 import gapiAuth from "./gapiAuth";
 import moment from "moment";
 import clearDataApi from "./clearDataApi";
-import { SHEET, SHEET_TYPE } from "../constants";
+import { ENV, SHEET, SHEET_TYPE } from "../constants";
 
 export default async function setNewWeekApi(now: moment.Moment = moment()) {
     try {
-        const spreadsheetId = process.env.GOOGLE_SHEET_ID;
+        const spreadsheetId = ENV.SPREADSHEET_ID;
 
         let start: moment.Moment;
         // If Sunday, use same week
@@ -21,7 +21,7 @@ export default async function setNewWeekApi(now: moment.Moment = moment()) {
         // Check based on the current start date, if the date range is already updated
         const currentStartDateResponse = await sheets.spreadsheets.values.get({
             spreadsheetId,
-            range: `${SHEET.PARADE_STATE}!D2`,
+            range: `${SHEET.PARADE_STATE}!E2`,
         });
         const currentStartDateString = currentStartDateResponse.data.values!![0][0];
         const currentStartDate = moment(currentStartDateString).year(start.year());
@@ -42,7 +42,7 @@ export default async function setNewWeekApi(now: moment.Moment = moment()) {
 
         const remarksResponse = await sheets.spreadsheets.values.get({
             spreadsheetId,
-            range: `${SHEET.PARADE_STATE}!N4:N`,
+            range: `${SHEET.PARADE_STATE}!O4:O`,
         });
 
         const remarks: any[] = remarksResponse.data.values!!;
@@ -62,7 +62,7 @@ export default async function setNewWeekApi(now: moment.Moment = moment()) {
                     for (let y = 0; y < numOfColToAppend; y++) {
                         remarksArr.push(remark);
                     }
-                    dataToAppend.push({ range: `${SHEET.PARADE_STATE}!R${4 + i}C4:R${4 + i}C${3 + numOfColToAppend}`, values: [remarksArr] });
+                    dataToAppend.push({ range: `${SHEET.PARADE_STATE}!R${4 + i}C5:R${4 + i}C${4 + numOfColToAppend}`, values: [remarksArr] });
                 } else {
                     remarksCellToClear.push(`${SHEET.PARADE_STATE}!N${4 + i}`);
                 }
@@ -74,7 +74,7 @@ export default async function setNewWeekApi(now: moment.Moment = moment()) {
             requestBody: {
                 valueInputOption: 'USER_ENTERED', data: [
                     {
-                        range: `${SHEET.PARADE_STATE}!D2:M2`,
+                        range: `${SHEET.PARADE_STATE}!E2:N2`,
                         values: [datesArr]
                     },
                     ...dataToAppend

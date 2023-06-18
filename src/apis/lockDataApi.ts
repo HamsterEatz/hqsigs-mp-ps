@@ -1,13 +1,13 @@
 import { google } from "googleapis";
 import gapiAuth from "./gapiAuth";
-import { SHEET } from "../constants";
+import { ENV, SHEET } from "../constants";
 
 export default async function fetchAndOrToggleLockDataApi(fetchOnly = true) {
     const sheets = google.sheets({ version: 'v4', auth: gapiAuth() });
 
-    const spreadsheetId = process.env.GOOGLE_SHEET_ID;
-    const CLIENT_EMAIL = process.env.GOOGLE_CLIENT_EMAIL || "";
-    const OP_EMAILS = process.env.GOOGLE_OP_EMAILS!!.split(",");
+    const spreadsheetId = ENV.SPREADSHEET_ID;
+    const CLIENT_EMAIL = ENV.CLIENT_EMAIL || "";
+    const OP_EMAILS = ENV.OPS_EMAIL!!.split(",");
 
     const fetchSheetsResponse = await sheets.spreadsheets.get({
         spreadsheetId,
@@ -48,7 +48,7 @@ export default async function fetchAndOrToggleLockDataApi(fetchOnly = true) {
                             range: {
                                 sheetId,
                                 startRowIndex: 3,
-                                startColumnIndex: 3,
+                                startColumnIndex: 4,
                                 endColumnIndex: 14,
                             },
                             description: rangeDescription,

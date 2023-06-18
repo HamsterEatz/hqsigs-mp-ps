@@ -2,7 +2,7 @@ import React from 'react';
 import { lockDataApi } from '../../apis';
 import styles from '../../styles/ParadeState.module.css';
 import Link, { useRouter } from 'next/router';
-import { promptPassword } from '../../constants';
+import { ENV, promptPassword } from '../../constants';
 
 export async function getServerSideProps({ query }) {
     try {
@@ -23,7 +23,7 @@ export async function getServerSideProps({ query }) {
 export default function LockStatus({ data, error }) {
     const router = useRouter();
     function onToggleButtonClick() {
-        return promptPassword(() => router.push(`lockStatus/toggle?password=${process.env.ADMIN_PASSWORD}`));
+        return promptPassword(() => router.push(`lockStatus/toggle?password=${ENV.ADMIN_PASSWORD}`));
     }
     return (
         <div className={styles.container}>

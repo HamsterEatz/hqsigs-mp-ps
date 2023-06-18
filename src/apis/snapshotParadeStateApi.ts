@@ -1,6 +1,6 @@
 import { google } from 'googleapis';
 import gapiAuth from "./gapiAuth";
-import { SHEET, SHEET_TYPE } from "../constants";
+import { ENV, SHEET, SHEET_TYPE } from "../constants";
 import moment from 'moment';
 import clearDataApi from './clearDataApi';
 
@@ -10,11 +10,11 @@ export default async function snapshotParadeStateApi(isFirstParade, now: moment.
         throw new Error('Snapshots cannot be generated on the weekend!');
     }
 
-    const colIndexToCopy = currentDay * 2 + (isFirstParade ? 2 : 3);
+    const colIndexToCopy = currentDay * 2 + (isFirstParade ? 3 : 4);
     const colToCopy = String.fromCharCode(64 + colIndexToCopy);
     
     const sheets = google.sheets({ version: 'v4', auth: gapiAuth() });
-    const spreadsheetId = process.env.GOOGLE_SHEET_ID;
+    const spreadsheetId = ENV.SPREADSHEET_ID;
     
     const paradeStateSheet = await sheets.spreadsheets.values.batchGet({
         spreadsheetId,

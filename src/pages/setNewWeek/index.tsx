@@ -1,15 +1,16 @@
 import styles from '../../styles/ParadeState.module.css';
 import { setNewWeekApi } from '../../apis';
 import moment from 'moment';
+import { ENV } from '../../constants';
 
 export async function getServerSideProps({ query }) {
-    const adminPassword = process.env.ADMIN_PASSWORD;
+    const adminPassword = ENV.ADMIN_PASSWORD;
     let error = 'Access denied';
     const now = moment();
 
     if (query.password === adminPassword) {
         try {
-            if (now.day() < 5 || (now.day() === 5 && now.hours() < 17)) {
+            if ((now.day() !== 0 && now.day() < 5) || (now.day() === 5 && now.hours() < 17)) {
                 throw new Error('You can only set new week from Friday 1700hrs - Sunday 2359hrs!');
             }
             const data = await setNewWeekApi(now);

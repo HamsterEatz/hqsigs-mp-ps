@@ -1,12 +1,12 @@
 import { google } from "googleapis";
 import gapiAuth from "./gapiAuth";
-import { DOC_ALIGNMENT } from "../constants";
+import { DOC_ALIGNMENT, ENV } from "../constants";
 
 export default async function fetchDocsApi() {
     const docs = google.docs({ version: 'v1', auth: gapiAuth() });
 
     const response = await docs.documents.get({
-        documentId: process.env.GOOGLE_DOCS_ID
+        documentId: ENV.DOCUMENT_ID
     });
 
     const content = response.data.body?.content;

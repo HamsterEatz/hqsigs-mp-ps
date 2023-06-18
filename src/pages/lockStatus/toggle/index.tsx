@@ -2,9 +2,10 @@ import React, { useEffect } from 'react';
 import { lockDataApi } from '../../../apis';
 import styles from '../../../styles/ParadeState.module.css';
 import { useRouter } from 'next/router';
+import { ENV } from '../../../constants';
 
 export async function getServerSideProps({ query }) {
-    const adminPassword = process.env.ADMIN_PASSWORD;
+    const adminPassword = ENV.ADMIN_PASSWORD;
     let error = 'Access denied';
 
     if (query.password === adminPassword) {

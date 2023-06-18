@@ -6,7 +6,7 @@ import Image from 'next/image';
 import whatsappSvg from '../public/whatsapp.svg';
 import phoneSvg from '../public/phone.svg';
 import { useRouter } from 'next/router';
-import { promptPassword } from '../constants';
+import { ENV, promptPassword } from '../constants';
 import Link from 'next/link';
 
 export default function ParadeState({ isFirstParade, data, error }) {
@@ -58,7 +58,7 @@ export default function ParadeState({ isFirstParade, data, error }) {
     }
     const router = useRouter();
     function onLockButtonClick() {
-        return promptPassword(() => router.push(`../lockStatus/toggle?password=${process.env.ADMIN_PASSWORD}`))
+        return promptPassword(() => router.push(`../lockStatus/toggle?password=${ENV.ADMIN_PASSWORD}`))
     }
 
     return (

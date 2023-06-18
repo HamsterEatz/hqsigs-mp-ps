@@ -33,3 +33,7 @@ button:hover {
   opacity: 0.8;
   cursor: pointer;
 }
+
+form * {
+  margin-right: 1rem;
+}
