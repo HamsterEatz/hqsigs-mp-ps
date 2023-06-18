@@ -1,6 +1,7 @@
+import { NextApiRequest, NextApiResponse } from "next";
 import { removeUserApi } from "../../apis";
 
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const userId = JSON.parse(req.body).userId
     
     if (!userId) {
@@ -8,7 +9,7 @@ export default async function handler(req, res) {
     }
    
     try {
-        const t = await removeUserApi(userId);
+        await removeUserApi(userId);
         res.status(200).json({ message: `Removed ${userId}'th user` });
     } catch (e) {
         res.status(400).send(e.message);

@@ -5,13 +5,15 @@ import Modal from './Modal';
 import Image from 'next/image';
 import whatsappSvg from '../public/whatsapp.svg';
 import phoneSvg from '../public/phone.svg';
-import { useRouter } from 'next/router';
-import { ENV, promptPassword } from '../constants';
-import Link from 'next/link';
+import copySvg from '../public/copy.svg';
+import snapshotSvg from '../public/snapshot.svg';
+import lockSvg from '../public/lock.svg';
+import unlockSvg from '../public/unlock.svg';
 
 export default function ParadeState({ isFirstParade, data, error }) {
     const [showModal, setShowModal] = useState(false);
     const [info, setInfo] = useState('');
+    const [isLocked, setIsLocked] = useState(false);
 
     function copyParadeState(e) {
         e.preventDefault();
@@ -28,6 +30,7 @@ export default function ParadeState({ isFirstParade, data, error }) {
     useEffect(() => {
         if (data) {
             setInfoFromData(data);
+            setIsLocked(data.isLocked);
         }
     }, [data]);
 
@@ -56,9 +59,25 @@ export default function ParadeState({ isFirstParade, data, error }) {
 
         setInfo(info);
     }
-    const router = useRouter();
-    function onLockButtonClick() {
-        return promptPassword(() => router.push(`../lockStatus/toggle?password=${ENV.ADMIN_PASSWORD}`))
+    async function onLockButtonClick() {
+        const password = prompt('Enter admin password');
+        const res = await fetch(location.origin + '/api/toggleLock', {
+            method: 'POST',
+            body: JSON.stringify({ password })
+        });
+        setIsLocked(!isLocked);
+        alert((await res.json()).message);
+    }
+    async function onSnapshotButtonClick() {
+        const password = prompt('Enter admin password');
+        const res = await fetch(location.origin + '/api/snapshot', {
+            method: 'POST',
+            body: JSON.stringify({
+                password,
+                isFirstParade
+            })
+        });
+        alert((await res.json()).message);
     }
 
     return (
@@ -83,12 +102,15 @@ export default function ParadeState({ isFirstParade, data, error }) {
             </div>
             <h2>{isFirstParade ? 'First' : 'Last'} Parade State: {!error &&
                 <>
-                    <button onClick={copyParadeState} className={styles.copyButton} type="button">Copy
+                    <button onClick={copyParadeState} className={styles.copyButton} type="button"><Image className={styles.icon} alt="copy" src={copySvg} width={15} height={15} />
                         <span id="copyToClipboardTooltip" className={styles.copyButtonTooltip}>Copied!</span>
                     </button>
-                    <Link href={router.asPath + '/snapshot'}><button className={styles.snapshotButton}>Snapshot</button></Link>
+                    <button className={styles.snapshotButton} onClick={onSnapshotButtonClick}><Image className={styles.icon} alt="snapshot" src={snapshotSvg} width={15} height={15} /></button>
+                    <button className={isLocked ? styles.unlockButton : styles.lockButton} onClick={onLockButtonClick}>{isLocked ? 
+                        <Image className={styles.icon} alt="unlock" src={unlockSvg} width={15} height={15} />
+                        : <Image className={styles.icon} alt="lock" src={lockSvg} width={15} height={15} />}
+                    </button>
                 </>}
-                {isFirstParade && data && !data.isLocked && <button className={styles.lockButton} onClick={onLockButtonClick}>Lock</button>}
             </h2>
             <div className={styles.grid}>
                 <span className={styles.state}>

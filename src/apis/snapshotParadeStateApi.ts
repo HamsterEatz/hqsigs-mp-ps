@@ -4,7 +4,7 @@ import { ENV, SHEET, SHEET_TYPE } from "../constants";
 import moment from 'moment';
 import clearDataApi from './clearDataApi';
 
-export default async function snapshotParadeStateApi(isFirstParade, now: moment.Moment = moment()) {
+export default async function snapshotParadeStateApi(isFirstParade: boolean, now: moment.Moment = moment()) {
     const currentDay = now.day();
     if (currentDay === 0 || currentDay === 6) {
         throw new Error('Snapshots cannot be generated on the weekend!');

@@ -13,10 +13,10 @@ export async function getServerSideProps({ query }) {
             if ((now.day() !== 0 && now.day() < 5) || (now.day() === 5 && now.hours() < 17)) {
                 throw new Error('You can only set new week from Friday 1700hrs - Sunday 2359hrs!');
             }
-            const data = await setNewWeekApi(now);
+            await setNewWeekApi(now);
             return {
                 props: {
-                    data
+                    data: 'Sheet has been updated!'
                 }
             }
         } catch (e) {

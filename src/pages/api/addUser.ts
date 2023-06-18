@@ -1,6 +1,7 @@
+import { NextApiRequest, NextApiResponse } from "next";
 import { addUserApi } from "../../apis";
 
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const body = req.body;
     const { name, rank, contact } = body;
    

@@ -80,6 +80,10 @@
   line-height: 1.5;
 }
 
+.headerTitle:hover {
+  cursor: pointer;
+}
+
 @media (max-width: 480px) {
   .footerItems {
     display: block;

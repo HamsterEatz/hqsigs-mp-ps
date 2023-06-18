@@ -5,7 +5,7 @@ import { compareParadeStateApi, paradeStateApi } from '../../apis';
 export async function getServerSideProps({ query }) {
     try {
         const state = await paradeStateApi(false);
-        const diffArr = await compareParadeStateApi(false, state);
+        const diffArr = await compareParadeStateApi(false, state) || [];
         return {
             props: {
                 data: { diffArr, ...state }

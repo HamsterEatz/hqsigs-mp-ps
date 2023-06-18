@@ -5,10 +5,12 @@ import styles from '../styles/Home.module.css';
 import Image from 'next/image';
 import moment from 'moment-timezone';
 import pjson from '../../package.json';
+import { useRouter } from 'next/router';
 
 moment.tz.setDefault('Asia/Singapore');
 
 function MyApp({ Component, pageProps }) {
+  const router = useRouter();
   return (
     <div className={styles.pageContainer}>
       <header className={styles.header}>
@@ -17,7 +19,7 @@ function MyApp({ Component, pageProps }) {
           <meta name="description" content="Parade State" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <h1>HQ Signals Manpower Branch Parade State</h1>
+        <h1 className={styles.headerTitle} onClick={() => router.push('/')}>HQ Signals Manpower Branch Parade State</h1>
       </header>
 
       <main id='mainRoot' className={styles.main}>

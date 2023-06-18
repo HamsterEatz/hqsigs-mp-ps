@@ -27,7 +27,7 @@ export default async function setNewWeekApi(now: moment.Moment = moment()) {
         const currentStartDate = moment(currentStartDateString).year(start.year());
         const isUpdated = currentStartDate.isSame(start.clone().add(1, 'day'), 'date');
         if (isUpdated) {
-            return 'Sheet has already been updated!';
+            throw new Error('Unable to update as sheet was already updated!');
         }
 
         await clearDataApi(SHEET_TYPE.PARADE_STATE);
@@ -90,8 +90,6 @@ export default async function setNewWeekApi(now: moment.Moment = moment()) {
         });
 
         // TODO: Check via Google Calendars API to highlight in yellow if public holiday or there are any events
-
-        return 'Sheet has been updated!';
     } catch (e) {
         throw e;
     }

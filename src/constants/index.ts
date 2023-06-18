@@ -15,8 +15,7 @@ export const LEGENDS = {
 }
 
 export const SHEET = {
-    PARADE_STATE: 'Parade State (1)',
-    CONTACT_LIST: 'Contact List',
+    PARADE_STATE: 'Parade State (Test)',
     PARADE_STATE_SNAPSHOT: '(SNAPSHOT) Parade State'
 }
 
@@ -38,15 +37,6 @@ export const ENV = {
     CLIENT_EMAIL: process.env.GOOGLE_CLIENT_EMAIL,
     PRIVATE_KEY: process.env.GOOGLE_PRIVATE_KEY,
     OPS_EMAIL: process.env.GOOGLE_OP_EMAILS
-}
-
-export function promptPassword(onSuccess) {
-    const adminPassword = ENV.ADMIN_PASSWORD;
-    const passwordInput = prompt();
-    if (passwordInput === adminPassword) {
-        return onSuccess();
-    }
-    return alert('Access denied!');
 }
 
 export enum RANKS {
