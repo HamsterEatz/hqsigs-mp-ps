@@ -12,21 +12,35 @@ import unlockSvg from '../public/unlock.svg';
 
 export default function ParadeState({ isFirstParade, data, error }) {
     const [showModal, setShowModal] = useState(false);
-    const [info, setInfo] = useState('');
     const [isLocked, setIsLocked] = useState(false);
+    const now = moment();
+    const key = `${now.format('DD/MM')}-${isFirstParade}`;
+    const [currPresentArr, setCurrPresentArr] = useState<any[]>([]);
 
     function copyParadeState(e) {
         e.preventDefault();
         if (data) {
             let copyButton = document.getElementById('copyToClipboardTooltip');
             copyButton!!.style.visibility = 'visible';
-            navigator.clipboard.writeText(info);
+            navigator.clipboard.writeText(setInfoFromData());
             window.setTimeout(() => copyButton!!.style.visibility = 'hidden', 2000);
             if (data.unaccounted.length > 0) {
                 setShowModal(true);
             }
         }
     }
+
+    useEffect(() => {
+        const presentLocalStorage = localStorage.getItem(key);
+        setCurrPresentArr(presentLocalStorage ? presentLocalStorage.split(',') : []);
+    }, []);
+
+    useEffect(() => {
+        if (currPresentArr.length) {
+            return localStorage.setItem(key, currPresentArr.toString());
+        }
+    }, [currPresentArr]);
+
     useEffect(() => {
         if (data) {
             setInfoFromData(data);
@@ -34,31 +48,64 @@ export default function ParadeState({ isFirstParade, data, error }) {
         }
     }, [data]);
 
-    async function setInfoFromData(data: { diffArr, present, absent, unaccounted }) {
+    function setInfoFromData(raw = true) {
         const { present, absent, unaccounted } = data;
-        const now = moment();
-        let info = `*${now.format('DD/MM/YY')} ${isFirstParade ? 'First' : 'Last'} Parade - Manpower Br*\n\n*Present*:`;
-        for (let i = 0; i < present.length; i++) {
-            info += `\n${i + 1}) ${present[i].rank} ${present[i].name}`;
-        }
-        if (absent.length > 0) {
-            info += '\n\n*Absent*:';
-            for (let i = 0; i < absent.length; i++) {
-                info += `\n${i + 1}) ${absent[i].rank} ${absent[i].name} (${absent[i].state})`;
+        let info;
+
+        if (raw) {
+            info = `*${now.format('DD/MM/YY')} ${isFirstParade ? 'First' : 'Last'} Parade - Manpower Br*\n\n*Present*:`;
+            for (let i = 0; i < present.length; i++) {
+                info += `\n${i + 1}) ${present[i].rank} ${present[i].name}`;
             }
-        }
-        if (unaccounted.length > 0) {
-            setShowModal(true);
-            info += '\n\n*Unaccounted*:';
-            for (let i = 0; i < unaccounted.length; i++) {
-                const rank = unaccounted[i].rank;
-                const name = unaccounted[i].name;
-                info += `\n${i + 1}) ${rank} ${name}`;
+            if (absent.length > 0) {
+                info += '\n\n*Absent*:';
+                for (let i = 0; i < absent.length; i++) {
+                    info += `\n${i + 1}) ${absent[i].rank} ${absent[i].name} (${absent[i].state})`;
+                }
             }
+            if (unaccounted.length > 0) {
+                setShowModal(true);
+                info += '\n\n*Unaccounted*:';
+                for (let i = 0; i < unaccounted.length; i++) {
+                    const rank = unaccounted[i].rank;
+                    const name = unaccounted[i].name;
+                    info += `\n${i + 1}) ${rank} ${name}`;
+                }
+            }
+            return info;
         }
 
-        setInfo(info);
+        return <>
+            <p><b>{`${now.format('DD/MM/YY')} ${isFirstParade ? 'First' : 'Last'} Parade - Manpower Br`}</b></p>
+            {present.length > 0 ? <p><b>Present:</b></p> : <></>}
+            {present.map((v, i) => (
+                <p key={i}>
+                    <input type="checkbox" id={`presentInputId${i}`} value={`${v.rank} ${v.name}`} onChange={onPresentCheckboxClick} checked={currPresentArr.find(e => e === `${v.rank} ${v.name}`)} />
+                    <label htmlFor={`presentInputId${i}`}> {`${i + 1}) ${v.rank} ${v.name}`}</label><br />
+                </p>
+            ))}
+            {absent.length > 0 ? <><br/><p><b>Absent:</b></p></> : <></>}
+            {absent.map((v, i) => (<p key={i}>{i + 1}) {v.rank} {v.name}</p>))}
+            {unaccounted.length > 0 ? <><br/><p><b>Unaccounted:</b></p></> : <></>}
+            {unaccounted.map((v, i) => (<p key={i}>{i + 1}) {v.rank} {v.name}</p>))}
+        </>;
     }
+
+    function onPresentCheckboxClick(e) {
+        const value = e.target.value;
+        const isChecked = e.target.checked;
+        if (isChecked) {
+            setCurrPresentArr([...currPresentArr, value]);
+        } else {
+            const newArr = currPresentArr.filter((v) => v !== value);
+            if (newArr.length === 0) {
+                setCurrPresentArr([]);
+                return localStorage.removeItem(key);
+            }
+            setCurrPresentArr(newArr);
+        }
+    }
+
     async function onLockButtonClick() {
         const password = prompt('Enter admin password');
         const res = await fetch(location.origin + '/api/toggleLock', {
@@ -125,7 +172,7 @@ export default function ParadeState({ isFirstParade, data, error }) {
                             <hr />
                             <br />
                         </>}
-                        <>{info}</>
+                        <>{setInfoFromData(false)}</>
                     </>}
                 </span>
             </div>
