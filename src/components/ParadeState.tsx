@@ -135,7 +135,9 @@ export default function ParadeState({ isFirstParade, data, error }) {
             method: 'POST',
             body: JSON.stringify({ password })
         });
-        setIsLocked(!isLocked);
+        if (res.ok) {
+            setIsLocked(!isLocked);
+        }
         alert((await res.json()).message);
     }
     async function onSnapshotButtonClick() {
