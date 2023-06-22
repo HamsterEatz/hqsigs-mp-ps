@@ -8,6 +8,10 @@ import fetchDocsApi from "./fetchDocsApi";
 import getUsersApi from "./getUsersApi";
 import removeUserApi from "./removeUserApi";
 import addUserApi from "./addUserApi";
+import updateUserParadeStateApi from "./updateUserParadeStateApi";
+import moment from "moment-timezone";
+
+moment.tz.setDefault('Asia/Singapore');
 
 export {
     paradeStateApi,
@@ -19,5 +23,6 @@ export {
     fetchDocsApi,
     getUsersApi,
     removeUserApi,
-    addUserApi
+    addUserApi,
+    updateUserParadeStateApi
 };

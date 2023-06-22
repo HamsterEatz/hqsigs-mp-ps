@@ -9,6 +9,7 @@ import copySvg from '../public/copy.svg';
 import snapshotSvg from '../public/snapshot.svg';
 import lockSvg from '../public/lock.svg';
 import unlockSvg from '../public/unlock.svg';
+import { ENV } from '../constants';
 
 export default function ParadeState({ isFirstParade, data, error }) {
     const [showModal, setShowModal] = useState(false);
@@ -48,6 +49,26 @@ export default function ParadeState({ isFirstParade, data, error }) {
         }
     }, [data]);
 
+    async function updateParadeState({ rank, name }) {
+        const adminPassword = prompt("Enter admin password");
+        if (adminPassword !== ENV.ADMIN_PASSWORD) {
+            return alert('Unauthorised!');
+        }
+        const newState = prompt(`Enter new state ${rank} ${name}:`);
+        const res = await fetch(`${location.origin}/api/updateUserParadeState`, {
+            method: 'POST',
+            body: JSON.stringify({
+                rank,
+                name,
+                now,
+                isFirstParade,
+                newState,
+                password: adminPassword
+            })
+        });
+        alert((await res.json()).message);
+    }
+
     function setInfoFromData(raw = true) {
         const { present, absent, unaccounted } = data;
         let info;
@@ -81,7 +102,9 @@ export default function ParadeState({ isFirstParade, data, error }) {
             {present.map((v, i) => (
                 <p key={i}>
                     <input type="checkbox" id={`presentInputId${i}`} value={`${v.rank} ${v.name}`} onChange={onPresentCheckboxClick} checked={currPresentArr.find(e => e === `${v.rank} ${v.name}`)} />
-                    <label htmlFor={`presentInputId${i}`}> {`${i + 1}) ${v.rank} ${v.name}`}</label><br />
+                    <label htmlFor={`presentInputId${i}`}> {`${i + 1}) ${v.rank} ${v.name}`}</label>
+                    <button className={styles.snapshotButton} onClick={() => updateParadeState(v)}>Update state</button>
+                    <br />  
                 </p>
             ))}
             {absent.length > 0 ? <><br/><p><b>Absent:</b></p></> : <></>}
