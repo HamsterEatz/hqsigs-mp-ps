@@ -31,9 +31,18 @@ async function filterData({ now, isFirstParade, values }) {
         const rank = value[2];
         if (!isNaN(Number(value[0])) && name) {
             const currentDay = now.day();
-            const state = value[currentDay * 2 + (isFirstParade ? 2 : 3)]?.trim();
+            const paradeIndex = currentDay * 2 + (isFirstParade ? 2 : 3);
+            const state = value[paradeIndex]?.trim();
             if (state) {
                 if (state.toUpperCase() === LEGENDS.PRESENT) {
+                    if (!isFirstParade) {
+                        const previousValue = value[paradeIndex - 1]?.trim();
+                        if (previousValue === 'MA') {
+                            present.push({ name, rank, previousMA: true });
+                            continue;
+                        }
+                    }
+
                     present.push({ name, rank });
                 } else {
                     if (state?.includes("from")) {

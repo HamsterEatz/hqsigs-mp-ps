@@ -101,6 +101,7 @@ export default function ParadeState({ isFirstParade, data, error }) {
             {present.length > 0 ? <p><b>Present:</b></p> : <></>}
             {present.map((v, i) => (
                 <p key={i}>
+                    {v.previousMA ? <b style={{ color: 'red' }}>!</b> : <></>}
                     <input type="checkbox" id={`presentInputId${i}`} value={`${v.rank} ${v.name}`} onChange={onPresentCheckboxClick} checked={currPresentArr.find(e => e === `${v.rank} ${v.name}`)} />
                     <label htmlFor={`presentInputId${i}`}> {`${i + 1}) ${v.rank} ${v.name}`}</label>
                     <button className={styles.snapshotButton} onClick={() => updateParadeState(v)}>Update state</button>
