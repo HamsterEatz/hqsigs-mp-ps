@@ -15,7 +15,7 @@ export const LEGENDS = {
 }
 
 export const SHEET = {
-    PARADE_STATE: 'Parade State (Test)',
+    PARADE_STATE: 'Parade State (1)',
     PARADE_STATE_SNAPSHOT: '(SNAPSHOT) Parade State'
 }
 
@@ -36,8 +36,11 @@ export const ENV = {
     CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     CLIENT_EMAIL: process.env.GOOGLE_CLIENT_EMAIL,
     PRIVATE_KEY: process.env.GOOGLE_PRIVATE_KEY,
-    OPS_EMAIL: process.env.GOOGLE_OP_EMAILS
+    OPS_EMAIL: process.env.GOOGLE_OP_EMAILS,
+    CALENDAR_ID: process.env.GOOGLE_CALENDAR_ID
 }
+
+export const PUBLIC_HOLIDAY_CALENDAR_ID = 'en.singapore#holiday@group.v.calendar.google.com';
 
 export enum RANKS {
     REC = 'REC',

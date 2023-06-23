@@ -1,6 +1,7 @@
 import { google } from "googleapis";
 import gapiAuth from "./gapiAuth";
 import { ENV, SHEET } from "../constants";
+import getSheetByName from "./getSheetByName";
 
 export default async function fetchAndOrToggleLockDataApi(fetchOnly = true) {
     const sheets = google.sheets({ version: 'v4', auth: gapiAuth() });
@@ -9,23 +10,12 @@ export default async function fetchAndOrToggleLockDataApi(fetchOnly = true) {
     const CLIENT_EMAIL = ENV.CLIENT_EMAIL || "";
     const OP_EMAILS = ENV.OPS_EMAIL!!.split(",");
 
-    const fetchSheetsResponse = await sheets.spreadsheets.get({
-        spreadsheetId,
-    });
-
-    const currSheets = fetchSheetsResponse.data.sheets;
-    let sheetId;
+    const sheet = await getSheetByName(SHEET.PARADE_STATE);
     let protectedRangeId;
     const rangeDescription = 'Disable edit';
-    for (const sheet of currSheets || []) {
-        if (sheet.properties?.title === SHEET.PARADE_STATE) {
-            sheetId = sheet.properties.sheetId;
-            for (const range of sheet.protectedRanges || []) {
-                if (range.description === rangeDescription) {
-                    protectedRangeId = range.protectedRangeId;
-                    break;
-                }
-            }
+    for (const range of sheet.protectedRanges || []) {
+        if (range.description === rangeDescription) {
+            protectedRangeId = range.protectedRangeId;
             break;
         }
     }
@@ -46,7 +36,7 @@ export default async function fetchAndOrToggleLockDataApi(fetchOnly = true) {
                     addProtectedRange: {
                         protectedRange: {
                             range: {
-                                sheetId,
+                                sheetId: sheet.properties?.sheetId,
                                 startRowIndex: 3,
                                 startColumnIndex: 4,
                                 endColumnIndex: 14,

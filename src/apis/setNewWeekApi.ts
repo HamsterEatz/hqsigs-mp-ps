@@ -3,6 +3,8 @@ import gapiAuth from "./gapiAuth";
 import moment from "moment";
 import clearDataApi from "./clearDataApi";
 import { ENV, SHEET, SHEET_TYPE } from "../constants";
+import getCalendarEventsApi from "./getCalendarEventsApi";
+import getSheetByName from "./getSheetByName";
 
 export default async function setNewWeekApi(now: moment.Moment = moment()) {
     try {
@@ -31,6 +33,28 @@ export default async function setNewWeekApi(now: moment.Moment = moment()) {
         }
 
         await clearDataApi(SHEET_TYPE.PARADE_STATE);
+
+        const paradeStateSheet = await getSheetByName(SHEET.PARADE_STATE);
+        await sheets.spreadsheets.batchUpdate({
+            spreadsheetId,
+            requestBody: {
+                requests: [{
+                    repeatCell: {
+                        fields: 'userEnteredFormat(backgroundColor)',
+                        range: {
+                            sheetId: paradeStateSheet.properties?.sheetId,
+                            startRowIndex: 0,
+                            startColumnIndex: 0,
+                        },
+                        cell: {
+                            userEnteredFormat: {
+                                backgroundColor: { red: 1, green: 1, blue: 1 }
+                            }
+                        }
+                    }
+                }]
+            }
+        });
 
         const startToEnd = start.clone();
         const datesArr: string[] = [];
@@ -89,7 +113,32 @@ export default async function setNewWeekApi(now: moment.Moment = moment()) {
             }
         });
 
-        // TODO: Check via Google Calendars API to highlight in yellow if public holiday or there are any events
+        const getCalendarEvents = await getCalendarEventsApi(start);
+        if (getCalendarEvents.size <= 0) {
+            return;
+        }
+
+        await sheets.spreadsheets.batchUpdate({
+            spreadsheetId,
+            requestBody: {
+                requests: Array.from(getCalendarEvents.keys()).map((k) => ({
+                    repeatCell: {
+                        fields: 'userEnteredFormat(backgroundColor)',
+                        range: {
+                            sheetId: paradeStateSheet.properties?.sheetId,
+                            startRowIndex: 1,
+                            startColumnIndex: (Number(k) * 2) + 2,
+                            endColumnIndex: (Number(k) * 2) + 4
+                        },
+                        cell: {
+                            userEnteredFormat: {
+                                backgroundColor: { red: 1, green: 38, blue: 153 }
+                            }
+                        }
+                    }
+                }))
+            }
+        });
     } catch (e) {
         throw e;
     }

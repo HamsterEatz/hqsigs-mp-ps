@@ -18,10 +18,10 @@ export default async function clearDataApi(sheetType: string) {
 
     const sheets = google.sheets({ version: 'v4', auth: gapiAuth() });
 
-        const response = await sheets.spreadsheets.values.clear({
-            spreadsheetId: ENV.SPREADSHEET_ID,
-            range,
-        });
+    const response = await sheets.spreadsheets.values.clear({
+        spreadsheetId: ENV.SPREADSHEET_ID,
+        range,
+    });
     
-        return response.data.clearedRange;
+    return response.data.clearedRange;
 }
