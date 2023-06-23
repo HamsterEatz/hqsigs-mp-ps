@@ -51,22 +51,30 @@ export default function ParadeState({ isFirstParade, data, error }) {
 
     async function updateParadeState({ rank, name }) {
         const adminPassword = prompt("Enter admin password");
+        if (adminPassword === null) {
+            return;
+          }
         if (adminPassword !== ENV.ADMIN_PASSWORD) {
             return alert('Unauthorised!');
         }
         const newState = prompt(`Enter new state ${rank} ${name}:`);
-        const res = await fetch(`${location.origin}/api/updateUserParadeState`, {
-            method: 'POST',
-            body: JSON.stringify({
-                rank,
-                name,
-                now,
-                isFirstParade,
-                newState,
-                password: adminPassword
-            })
-        });
-        alert((await res.json()).message);
+        if (newState) {
+            const res = await fetch(`${location.origin}/api/updateUserParadeState`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    rank,
+                    name,
+                    now,
+                    isFirstParade,
+                    newState,
+                    password: adminPassword
+                })
+            });
+            alert((await res.json()).message);
+        }
+        if (newState === '') {
+            alert("State cannot be empty!");
+        }
     }
 
     function setInfoFromData(raw = true) {
@@ -109,7 +117,7 @@ export default function ParadeState({ isFirstParade, data, error }) {
                 </p>
             ))}
             {absent.length > 0 ? <><br/><p><b>Absent:</b></p></> : <></>}
-            {absent.map((v, i) => (<p key={i}>{i + 1}) {v.rank} {v.name}</p>))}
+            {absent.map((v, i) => (<p key={i}>{i + 1}) {v.rank} {v.name} ({v.state})</p>))}
             {unaccounted.length > 0 ? <><br/><p><b>Unaccounted:</b></p></> : <></>}
             {unaccounted.map((v, i) => (<p key={i}>{i + 1}) {v.rank} {v.name}</p>))}
         </>;
@@ -132,6 +140,9 @@ export default function ParadeState({ isFirstParade, data, error }) {
 
     async function onLockButtonClick() {
         const password = prompt('Enter admin password');
+        if (password === null) {
+            return;
+          }
         const res = await fetch(location.origin + '/api/toggleLock', {
             method: 'POST',
             body: JSON.stringify({ password })
@@ -143,6 +154,9 @@ export default function ParadeState({ isFirstParade, data, error }) {
     }
     async function onSnapshotButtonClick() {
         const password = prompt('Enter admin password');
+        if (password === null) {
+            return;
+          }
         const res = await fetch(location.origin + '/api/snapshot', {
             method: 'POST',
             body: JSON.stringify({

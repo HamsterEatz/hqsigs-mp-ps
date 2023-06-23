@@ -11,6 +11,9 @@ export default function Home() {
 
   async function onSetNewWeekOnClick() {
     const password = prompt('Enter admin password');
+    if (password === null) {
+      return;
+    }
     const data = await fetch(location.origin + '/api/setNewWeek', {
       method: 'POST',
       body: JSON.stringify({ password })
@@ -20,6 +23,9 @@ export default function Home() {
 
   function onUsersPanelOnClick() {
     const passwordInput = prompt('Enter admin password');
+    if (passwordInput === null) {
+      return;
+    }
     if (passwordInput === ENV.ADMIN_PASSWORD) {
       return router.push({ pathname: 'users', query: { password: ENV.ADMIN_PASSWORD } });
     }

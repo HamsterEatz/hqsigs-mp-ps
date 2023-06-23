@@ -15,7 +15,7 @@ export const LEGENDS = {
 }
 
 export const SHEET = {
-    PARADE_STATE: 'Parade State (1)',
+    PARADE_STATE: 'Parade State (Test)',
     PARADE_STATE_SNAPSHOT: '(SNAPSHOT) Parade State'
 }
 
