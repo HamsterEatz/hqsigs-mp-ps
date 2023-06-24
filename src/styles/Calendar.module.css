@@ -1,0 +1,44 @@
+.grid {
+    display: flex;
+    text-align: left;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.state {
+    border: 1px solid darkgray;
+    border-radius: 10px;
+    padding: 1rem 3rem;
+}
+
+.container {
+    text-align: center;
+}
+
+.formGroup {
+    display: grid;
+}
+
+.form {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.form label {
+    margin-bottom: .2rem;
+}
+
+.createEventButton {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: white;
+}
+
+.deleteEventButton {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+    margin-right: .5rem;
+}

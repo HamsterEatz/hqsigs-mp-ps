@@ -113,15 +113,34 @@ export default async function setNewWeekApi(now: moment.Moment = moment()) {
             }
         });
 
-        const getCalendarEvents = await getCalendarEventsApi(start);
-        if (getCalendarEvents.size <= 0) {
+        const { self, publicHoliday } = await getCalendarEventsApi(start);
+        const events = new Map<number, string>();
+        if (self && self.length > 0) {
+            for (const item of self) {
+                const summary = item.summary;
+                if (summary) {
+                    const start = item.start?.dateTime || item.start?.date;
+                    events.set(moment(start).day(), summary);
+                }
+            }
+        }
+        if (publicHoliday && publicHoliday.length > 0) {
+            for (const item of publicHoliday) {
+                const summary = item.summary;
+                if (summary) {
+                    const start = item.start?.dateTime || item.start?.date;
+                    events.set(moment(start).day(), summary);
+                }
+            }
+        }
+        if (events.size <= 0) {
             return;
         }
 
         await sheets.spreadsheets.batchUpdate({
             spreadsheetId,
             requestBody: {
-                requests: Array.from(getCalendarEvents.keys()).map((k) => ({
+                requests: Array.from(events.keys()).map((k) => ({
                     repeatCell: {
                         fields: 'userEnteredFormat(backgroundColor)',
                         range: {

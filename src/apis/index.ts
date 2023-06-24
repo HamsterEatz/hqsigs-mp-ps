@@ -9,6 +9,8 @@ import getUsersApi from "./getUsersApi";
 import removeUserApi from "./removeUserApi";
 import addUserApi from "./addUserApi";
 import updateUserParadeStateApi from "./updateUserParadeStateApi";
+import addNewCalendarEventApi from "./addNewCalendarEventApi";
+import deleteCalendarEventApi from "./deleteCalendarEventApi";
 import moment from "moment-timezone";
 
 moment.tz.setDefault('Asia/Singapore');
@@ -24,5 +26,7 @@ export {
     getUsersApi,
     removeUserApi,
     addUserApi,
-    updateUserParadeStateApi
+    updateUserParadeStateApi,
+    addNewCalendarEventApi,
+    deleteCalendarEventApi
 };
