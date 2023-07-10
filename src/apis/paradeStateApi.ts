@@ -2,7 +2,7 @@ import moment from "moment";
 import { google } from 'googleapis';
 import gapiAuth from "./gapiAuth";
 import getUsersApi from "./getUsersApi";
-import { ENV, LEGENDS, SHEET } from "../constants";
+import { LEGENDS, SHEET } from "../constants";
 
 export default async function paradeStateApi(isFirstParade, now: moment.Moment = moment()) {
     const currentDay = now.day();
@@ -13,7 +13,7 @@ export default async function paradeStateApi(isFirstParade, now: moment.Moment =
     const sheets = google.sheets({ version: 'v4', auth: gapiAuth() });
 
     const response = await sheets.spreadsheets.values.get({
-        spreadsheetId: ENV.SPREADSHEET_ID,
+        spreadsheetId: process.env.GOOGLE_SHEET_ID,
         range: `${SHEET.PARADE_STATE}!A4:O`,
     });
 
@@ -36,9 +36,9 @@ async function filterData({ now, isFirstParade, values }) {
             if (state) {
                 if (state.toUpperCase() === LEGENDS.PRESENT) {
                     if (!isFirstParade) {
-                        const previousValue = value[paradeIndex - 1]?.trim();
-                        if (previousValue === 'MA') {
-                            present.push({ name, rank, previousMA: true });
+                        const previousValue = value[paradeIndex - 1]?.trim().toUpperCase();
+                        if (previousValue === 'MA' || previousValue === 'RSO') {
+                            present.push({ name, rank, previousMAOrRSO: true });
                             continue;
                         }
                     }

@@ -16,7 +16,6 @@
 }
 
 .deleteButton {
-    margin-left: .4rem;
     background-color: #dc3545;
     color: white;
 }
@@ -55,4 +54,29 @@
 
 .icon {
     filter: invert(1);
+}
+
+.collapsible {
+    background-color: lightgray;
+    margin: 1rem;
+    padding: 1rem 1rem;
+    border-radius: .3rem;
+}
+
+.collapsible:hover {
+    cursor: pointer;
+}
+
+.collapsibleGroup {
+    display: flex;
+    padding-top: .5rem;
+}
+
+.modifyRankButton {
+    background-color: #ffc107;
+    color: white;
+}
+
+.collapsibleItem {
+    padding-right: .5rem;
 }

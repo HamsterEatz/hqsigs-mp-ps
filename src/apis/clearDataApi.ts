@@ -1,6 +1,6 @@
 import { google } from "googleapis";
 import gapiAuth from "./gapiAuth";
-import { ENV, SHEET, SHEET_TYPE } from "../constants";
+import { SHEET, SHEET_TYPE } from "../constants";
 
 export default async function clearDataApi(sheetType: string) {
     let range: string = '';
@@ -19,9 +19,9 @@ export default async function clearDataApi(sheetType: string) {
     const sheets = google.sheets({ version: 'v4', auth: gapiAuth() });
 
     const response = await sheets.spreadsheets.values.clear({
-        spreadsheetId: ENV.SPREADSHEET_ID,
+        spreadsheetId: process.env.GOOGLE_SHEET_ID,
         range,
     });
-    
+
     return response.data.clearedRange;
 }

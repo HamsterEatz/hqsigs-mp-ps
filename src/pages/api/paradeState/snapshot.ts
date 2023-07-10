@@ -1,15 +1,14 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { snapshotParadeStateApi } from "../../apis";
-import { ENV } from "../../constants";
+import { snapshotParadeStateApi } from "../../../apis";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
-        const body = JSON.parse(req.body);
-        const password = body.password;
-        if (!password || password !== ENV.ADMIN_PASSWORD) {
-            return res.status(401).json({ message: 'Unauthorized' });
-        }
         try {
+            const body = JSON.parse(req.body);
+            const password = body.password;
+            if (!password || password !== process.env.ADMIN_PASSWORD) {
+                throw new Error('Unauthorized');
+            }
             await snapshotParadeStateApi(Boolean(body.isFirstParade));
             res.status(200).json({ message: 'Snapshot generated' });
         } catch (e) {

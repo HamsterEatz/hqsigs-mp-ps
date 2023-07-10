@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { fetchDocsApi } from '../../apis';
-import styles from '../../styles/ParadeState.module.css';
+import styles from '../../styles/Documentation.module.css';
 import Image from 'next/image';
 import QRCode from 'qrcode';
 import { useRouter } from 'next/router';

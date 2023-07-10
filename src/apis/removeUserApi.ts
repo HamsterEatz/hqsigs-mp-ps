@@ -1,14 +1,14 @@
 import { google } from "googleapis";
 import gapiAuth from "./gapiAuth";
-import { ENV, SHEET } from "../constants";
+import { SHEET, valueInputOption } from "../constants";
 
 export default async function removeUserApi(userId: number) {
     const sheets = google.sheets({ version: 'v4', auth: gapiAuth() });
 
-    const spreadsheetId = ENV.SPREADSHEET_ID;
+    const spreadsheetId = process.env.GOOGLE_SHEET_ID;
 
     const fetchSheetsResponse = await sheets.spreadsheets.get({
-        spreadsheetId: ENV.SPREADSHEET_ID,
+        spreadsheetId: process.env.GOOGLE_SHEET_ID,
     });
     const sheetTitleIdMap = new Map<string, number>();
     for (const sheet of fetchSheetsResponse.data.sheets || []) {
@@ -47,7 +47,7 @@ export default async function removeUserApi(userId: number) {
     await sheets.spreadsheets.values.update({
         spreadsheetId,
         range: `${SHEET.PARADE_STATE}!A4:A`,
-        valueInputOption: 'USER_ENTERED',
+        valueInputOption: valueInputOption,
         requestBody: {
             values: Array.from({ length: values!!.length }, (_, i) => [i + 1])
         }

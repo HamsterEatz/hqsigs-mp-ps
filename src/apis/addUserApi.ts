@@ -1,6 +1,6 @@
 import { google } from "googleapis";
 import gapiAuth from "./gapiAuth";
-import { ENV, SHEET } from "../constants";
+import { SHEET, valueInputOption } from "../constants";
 
 export default async function addUserApi({ name, rank, contact }) {
     if (!name || !rank || !contact) {
@@ -9,7 +9,7 @@ export default async function addUserApi({ name, rank, contact }) {
 
     const sheets = await google.sheets({ version: 'v4', auth: gapiAuth() });
 
-    const spreadsheetId = ENV.SPREADSHEET_ID;
+    const spreadsheetId = process.env.GOOGLE_SHEET_ID;
 
     const res1 = await sheets.spreadsheets.values.get({
         spreadsheetId,
@@ -17,11 +17,11 @@ export default async function addUserApi({ name, rank, contact }) {
     });
 
     const serialNumber = res1.data.values!!.length + 1;
-    
+
     await sheets.spreadsheets.values.append({
         spreadsheetId,
         range: SHEET.PARADE_STATE,
-        valueInputOption: 'USER_ENTERED',
+        valueInputOption: valueInputOption,
         requestBody: {
             values: [[serialNumber, name, rank, contact]]
         }

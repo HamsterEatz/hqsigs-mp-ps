@@ -1,6 +1,5 @@
 import { google } from "googleapis";
 import gapiAuth from "./gapiAuth";
-import { ENV } from "../constants";
 import moment from "moment";
 
 interface EventI {
@@ -10,6 +9,7 @@ interface EventI {
     start: {
         dateTime: string;
     }
+    isHalfDay?: boolean
 }
 
 export default async function addNewCalendarEventApi(event: EventI) {
@@ -17,11 +17,11 @@ export default async function addNewCalendarEventApi(event: EventI) {
     if (moment(startDate).isBefore(moment())) {
         throw new Error('Cannot create event with start date before now!');
     }
-    
+
     const calendar = await google.calendar({ version: 'v3', auth: gapiAuth() });
 
     const currList = await calendar.events.list({
-        calendarId: ENV.CALENDAR_ID,
+        calendarId: process.env.GOOGLE_CALENDAR_ID,
         timeZone: 'Asia/Singapore',
         timeMin: moment(startDate).startOf('day').toISOString(),
         timeMax: moment(startDate).add(1, 'day').startOf('day').toISOString(),
@@ -35,7 +35,7 @@ export default async function addNewCalendarEventApi(event: EventI) {
     }
 
     const response = await calendar.events.insert({
-        calendarId: ENV.CALENDAR_ID,
+        calendarId: process.env.GOOGLE_CALENDAR_ID,
         requestBody: {
             ...event,
             start: {
@@ -43,7 +43,8 @@ export default async function addNewCalendarEventApi(event: EventI) {
                 timeZone: "Asia/Singapore"
             },
             end: {
-                dateTime: moment(startDate).add(1, 'day').startOf('day').toISOString(),
+                dateTime: event.isHalfDay ? moment(startDate).startOf('day').add(12, 'hours').toISOString() :
+                    moment(startDate).add(1, 'day').startOf('day').toISOString(),
                 timeZone: "Asia/Singapore"
             },
         }

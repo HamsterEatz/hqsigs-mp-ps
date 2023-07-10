@@ -8,9 +8,10 @@ import fetchDocsApi from "./fetchDocsApi";
 import getUsersApi from "./getUsersApi";
 import removeUserApi from "./removeUserApi";
 import addUserApi from "./addUserApi";
-import updateUserParadeStateApi from "./updateUserParadeStateApi";
+import updateUsersParadeStateApi from "./updateUsersParadeStateApi";
 import addNewCalendarEventApi from "./addNewCalendarEventApi";
 import deleteCalendarEventApi from "./deleteCalendarEventApi";
+import modifyUserRankApi from "./modifyUserRankApi";
 import moment from "moment-timezone";
 
 moment.tz.setDefault('Asia/Singapore');
@@ -26,7 +27,8 @@ export {
     getUsersApi,
     removeUserApi,
     addUserApi,
-    updateUserParadeStateApi,
+    updateUsersParadeStateApi,
     addNewCalendarEventApi,
-    deleteCalendarEventApi
+    deleteCalendarEventApi,
+    modifyUserRankApi,
 };
