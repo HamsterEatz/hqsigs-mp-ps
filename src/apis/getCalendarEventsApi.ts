@@ -1,16 +1,16 @@
 import { google } from "googleapis";
 import gapiAuth from "./gapiAuth";
 import moment from "moment";
-import { ENV, PUBLIC_HOLIDAY_CALENDAR_ID } from "../constants";
+import { PUBLIC_HOLIDAY_CALENDAR_ID } from "../constants";
 
 export default async function getCalendarEvents(startDate?) {
     const calendar = await google.calendar({ version: 'v3', auth: gapiAuth() });
 
     const response1 = await calendar.events.list({
-        calendarId: ENV.CALENDAR_ID,
+        calendarId: process.env.GOOGLE_CALENDAR_ID,
         timeZone: 'Asia/Singapore',
         timeMin: startDate ? moment(startDate).startOf('week').toISOString() : moment().toISOString(),
-        timeMax: startDate ? moment(startDate).add(4, 'days').toISOString() : undefined,
+        timeMax: startDate ? moment(startDate).add(4, 'days').endOf('day').toISOString() : undefined,
         singleEvents: true,
         orderBy: 'startTime',
         maxResults: startDate ? 5 : undefined
@@ -20,7 +20,7 @@ export default async function getCalendarEvents(startDate?) {
         calendarId: PUBLIC_HOLIDAY_CALENDAR_ID,
         timeZone: 'Asia/Singapore',
         timeMin: startDate ? moment(startDate).startOf('week').toISOString() : moment().toISOString(),
-        timeMax: startDate ? moment(startDate).add(4, 'days').toISOString() : undefined,
+        timeMax: startDate ? moment(startDate).add(4, 'days').endOf('day').toISOString() : undefined,
         singleEvents: true,
         orderBy: 'startTime',
         maxResults: startDate ? 5 : undefined

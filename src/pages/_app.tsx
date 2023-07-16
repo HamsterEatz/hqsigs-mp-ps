@@ -29,7 +29,7 @@ function MyApp({ Component, pageProps }) {
       <footer className={styles.footer}>
         <div className={styles.footerItems}>
           <a className={styles.github} href="https://github.com/HamsterEatz/hqsigs-mp-ps" target="_blank" rel="noreferrer">
-            <Image alt="github" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" width={32} height={32} />
+            <Image className={styles.githubIcon} alt="github" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" width={32} height={32} />
             <span style={{ paddingLeft: 10 }}>https://github.com/HamsterEatz/hqsigs-mp-ps</span>
           </a>
           <p style={{ paddingLeft: '10%' }}>An open source project created by Nelson</p>

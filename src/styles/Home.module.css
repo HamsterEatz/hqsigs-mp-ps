@@ -3,6 +3,7 @@
   padding-bottom: 12%;
   align-items: center;
   min-height: 80vh;
+  max-width: 100%;
 }
 
 .header {
@@ -30,6 +31,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.githubIcon {
+  border-radius: 1rem;
 }
 
 .footerItems {

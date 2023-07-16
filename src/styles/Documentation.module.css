@@ -1,0 +1,18 @@
+.grid {
+    display: flex;
+    text-align: left;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.state {
+    white-space: pre-line;
+    border: 1px solid darkgray;
+    border-radius: 10px;
+    padding: 1rem 3rem;
+    overflow: scroll;
+}
+
+.container {
+    text-align: center;
+}

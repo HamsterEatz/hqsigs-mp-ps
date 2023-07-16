@@ -22,21 +22,6 @@
     border-color: #007bff;
 }
 
-.copyButtonTooltip {
-    visibility: hidden;
-    width: 6rem;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: .4rem 0;
-    opacity: 0.7;
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    margin-left: -3rem;
-}
-
 .lockButton {
     margin-left: .4rem;
     background-color: #dc3545;
@@ -67,4 +52,25 @@
 
 .icon {
     filter: invert(1);
+}
+
+.previousMAOrRSO {
+    background-color: #ffc107;
+    color: white;
+    border-radius: .5rem;
+    padding: 0 .4rem
+}
+
+.tooltip {
+    width: 6rem;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: .4rem 0;
+    opacity: 0.7;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -3rem;
 }

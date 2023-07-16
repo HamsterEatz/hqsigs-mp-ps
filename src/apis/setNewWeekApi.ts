@@ -2,13 +2,13 @@ import { google } from "googleapis";
 import gapiAuth from "./gapiAuth";
 import moment from "moment";
 import clearDataApi from "./clearDataApi";
-import { ENV, SHEET, SHEET_TYPE } from "../constants";
+import { SHEET, SHEET_TYPE, valueInputOption } from "../constants";
 import getCalendarEventsApi from "./getCalendarEventsApi";
 import getSheetByName from "./getSheetByName";
 
 export default async function setNewWeekApi(now: moment.Moment = moment()) {
     try {
-        const spreadsheetId = ENV.SPREADSHEET_ID;
+        const spreadsheetId = process.env.GOOGLE_SHEET_ID;
 
         let start: moment.Moment;
         // If Sunday, use same week
@@ -96,7 +96,7 @@ export default async function setNewWeekApi(now: moment.Moment = moment()) {
         await sheets.spreadsheets.values.batchUpdate({
             spreadsheetId,
             requestBody: {
-                valueInputOption: 'USER_ENTERED', data: [
+                valueInputOption: valueInputOption, data: [
                     {
                         range: `${SHEET.PARADE_STATE}!E2:N2`,
                         values: [datesArr]
@@ -114,13 +114,15 @@ export default async function setNewWeekApi(now: moment.Moment = moment()) {
         });
 
         const { self, publicHoliday } = await getCalendarEventsApi(start);
-        const events = new Map<number, string>();
+        const events = new Map<number, { summary: string, isHalfDay: boolean }>();
         if (self && self.length > 0) {
             for (const item of self) {
-                const summary = item.summary;
+                const summary = item?.summary;
                 if (summary) {
                     const start = item.start?.dateTime || item.start?.date;
-                    events.set(moment(start).day(), summary);
+                    const end = item.end?.dateTime || item.end?.date;
+                    const isHalfDay = moment(start).diff(end, 'day') !== 1 ? true : false;
+                    events.set(moment(start).day(), { summary, isHalfDay });
                 }
             }
         }
@@ -129,7 +131,7 @@ export default async function setNewWeekApi(now: moment.Moment = moment()) {
                 const summary = item.summary;
                 if (summary) {
                     const start = item.start?.dateTime || item.start?.date;
-                    events.set(moment(start).day(), summary);
+                    events.set(moment(start).day(), { summary, isHalfDay: false });
                 }
             }
         }
@@ -146,7 +148,7 @@ export default async function setNewWeekApi(now: moment.Moment = moment()) {
                         range: {
                             sheetId: paradeStateSheet.properties?.sheetId,
                             startRowIndex: 1,
-                            startColumnIndex: (Number(k) * 2) + 2,
+                            startColumnIndex: (Number(k) * 2) + (events.get(k)?.isHalfDay ? 3 : 2),
                             endColumnIndex: (Number(k) * 2) + 4
                         },
                         cell: {

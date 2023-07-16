@@ -1,12 +1,12 @@
 import { google } from "googleapis";
 import gapiAuth from "./gapiAuth";
-import { DOC_ALIGNMENT, ENV } from "../constants";
+import { DOC_ALIGNMENT } from "../constants";
 
 export default async function fetchDocsApi() {
     const docs = google.docs({ version: 'v1', auth: gapiAuth() });
 
     const response = await docs.documents.get({
-        documentId: ENV.DOCUMENT_ID
+        documentId: process.env.GOOGLE_DOCS_ID
     });
 
     const content = response.data.body?.content;
@@ -23,24 +23,24 @@ export default async function fetchDocsApi() {
                 // Rows
                 return a1 += `<tr>
                     ${c1.tableCells!!.reduce((a2, c2) => {
-                        const cellData = c2.content!!.reduce((a3, c3) => {
-                            // Cell content
-                            return a3 += c3.paragraph?.elements?.reduce((a4, c4) => {
-                                // Cell element
-                                const textRun = c4.textRun!!;
-                                const textStyle = textRun?.textStyle;
-                                let content = textRun?.content || "";
-                                content = styleText(textStyle, content);
-                                return a4 += content;
-                            }, '');
+                    const cellData = c2.content!!.reduce((a3, c3) => {
+                        // Cell content
+                        return a3 += c3.paragraph?.elements?.reduce((a4, c4) => {
+                            // Cell element
+                            const textRun = c4.textRun!!;
+                            const textStyle = textRun?.textStyle;
+                            let content = textRun?.content || "";
+                            content = styleText(textStyle, content);
+                            return a4 += content;
                         }, '');
+                    }, '');
 
-                        const colspan = c2.tableCellStyle?.columnSpan;
-                        // Cell
-                        return cellData.trim() ? a2 += `<td ${colspan ? `colspan="${colspan}"` : ''} style="border: 1px solid black; border-collapse: collapse; padding: 0 1rem">
+                    const colspan = c2.tableCellStyle?.columnSpan;
+                    // Cell
+                    return cellData.trim() ? a2 += `<td ${colspan ? `colspan="${colspan}"` : ''} style="border: 1px solid black; border-collapse: collapse; padding: 0 1rem">
                             ${cellData}
                         </td>` : a2;
-                    }, '')}
+                }, '')}
                 <tr>`
             }, '')}</table>`;
         }
@@ -76,7 +76,7 @@ export default async function fetchDocsApi() {
         }
         return accumulator += newContent;
     }, '');
-    
+
     return text;
 }
 

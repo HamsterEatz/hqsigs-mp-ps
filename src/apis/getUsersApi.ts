@@ -1,12 +1,12 @@
 import { google } from "googleapis";
 import gapiAuth from "./gapiAuth";
-import { ENV, SHEET } from "../constants";
+import { SHEET } from "../constants";
 
 export default async function getUsersApi() {
     const sheets = await google.sheets({ version: 'v4', auth: gapiAuth() });
-    
+
     const response = await sheets.spreadsheets.values.get({
-        spreadsheetId: ENV.SPREADSHEET_ID,
+        spreadsheetId: process.env.GOOGLE_SHEET_ID,
         range: `${SHEET.PARADE_STATE}!A4:D`
     });
 

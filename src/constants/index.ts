@@ -29,17 +29,6 @@ export enum DOC_ALIGNMENT {
     END = 'END'
 }
 
-export const ENV = {
-    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
-    SPREADSHEET_ID: process.env.GOOGLE_SHEET_ID,
-    DOCUMENT_ID: process.env.GOOGLE_DOCS_ID,
-    CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
-    CLIENT_EMAIL: process.env.GOOGLE_CLIENT_EMAIL,
-    PRIVATE_KEY: process.env.GOOGLE_PRIVATE_KEY,
-    OPS_EMAIL: process.env.GOOGLE_OP_EMAILS,
-    CALENDAR_ID: process.env.GOOGLE_CALENDAR_ID
-}
-
 export const PUBLIC_HOLIDAY_CALENDAR_ID = 'en.singapore#holiday@group.v.calendar.google.com';
 
 export enum RANKS {
@@ -50,3 +39,25 @@ export enum RANKS {
     CFC = 'CFC',
     THIRDSG = '3SG'
 }
+
+export function getRankHierarchy(rank) {
+    switch (rank) {
+        case RANKS.REC:
+            return 1;
+        case RANKS.PTE:
+            return 2;
+        case RANKS.LCP:
+            return 3;
+        case RANKS.CPL:
+            return 4;
+        case RANKS.CFC:
+            return 5;
+        case RANKS.THIRDSG:
+            return 6;
+        default:
+            return -1;
+    }
+}
+
+export const valueInputOption = 'USER_ENTERED';
+export const TELEGRAM_BOT_BASE_URL = `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/`;
