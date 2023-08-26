@@ -73,22 +73,24 @@ export default async function setNewWeekApi(now: moment.Moment = moment()) {
         const dataToAppend: any[] = [];
         const remarksCellToClear: string[] = [];
         start.add(1, 'day');
-        for (let i = 0; i < remarks.length; i++) {
-            const remark = remarks[i][0];
-            if (remark && remark.includes('from')) {
-                const dateRange = remark.split("from ")[1];
-                const splittedDates = dateRange.split("-");
-                const endDate = moment(splittedDates[1], 'DD/MM');
-                if (endDate.isSameOrAfter(start, 'days')) {
-                    let numOfColToAppend = (endDate.diff(start, 'days') + 1) * 2;
-                    numOfColToAppend = numOfColToAppend <= 10 ? numOfColToAppend : 10;
-                    const remarksArr: any[] = [];
-                    for (let y = 0; y < numOfColToAppend; y++) {
-                        remarksArr.push(remark);
+        if (remarks && remarks.length > 0) {
+            for (let i = 0; i < remarks.length; i++) {
+                const remark = remarks[i][0];
+                if (remark && remark.includes('from')) {
+                    const dateRange = remark.split("from ")[1];
+                    const splittedDates = dateRange.split("-");
+                    const endDate = moment(splittedDates[1], 'DD/MM');
+                    if (endDate.isSameOrAfter(start, 'days')) {
+                        let numOfColToAppend = (endDate.diff(start, 'days') + 1) * 2;
+                        numOfColToAppend = numOfColToAppend <= 10 ? numOfColToAppend : 10;
+                        const remarksArr: any[] = [];
+                        for (let y = 0; y < numOfColToAppend; y++) {
+                            remarksArr.push(remark);
+                        }
+                        dataToAppend.push({ range: `${SHEET.PARADE_STATE}!R${4 + i}C5:R${4 + i}C${4 + numOfColToAppend}`, values: [remarksArr] });
+                    } else {
+                        remarksCellToClear.push(`${SHEET.PARADE_STATE}!N${4 + i}`);
                     }
-                    dataToAppend.push({ range: `${SHEET.PARADE_STATE}!R${4 + i}C5:R${4 + i}C${4 + numOfColToAppend}`, values: [remarksArr] });
-                } else {
-                    remarksCellToClear.push(`${SHEET.PARADE_STATE}!N${4 + i}`);
                 }
             }
         }
