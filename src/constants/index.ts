@@ -29,7 +29,7 @@ export enum DOC_ALIGNMENT {
     END = 'END'
 }
 
-export const PUBLIC_HOLIDAY_CALENDAR_ID = 'en.singapore#holiday@group.v.calendar.google.com';
+export const PUBLIC_HOLIDAY_CALENDAR_ID = 'en.singapore.official#holiday@group.v.calendar.google.com';
 
 export enum RANKS {
     REC = 'REC',
