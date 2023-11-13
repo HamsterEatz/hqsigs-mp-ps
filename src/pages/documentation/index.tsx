@@ -1,27 +1,10 @@
 import { useEffect, useState } from 'react';
-import { fetchDocsApi } from '../../apis';
 import styles from '../../styles/Documentation.module.css';
 import Image from 'next/image';
 import QRCode from 'qrcode';
 import { useRouter } from 'next/router';
 
-export async function getServerSideProps({ query }) {
-    try {
-        return {
-            props: {
-                data: await fetchDocsApi()
-            }
-        }
-    } catch (e) {
-        return {
-            props: {
-                error: e.message
-            }
-        }
-    }
-}
-
-export default function Documentation({ data, error }) {
+export default function Documentation() {
     const [url, setUrl] = useState('');
     
     const router = useRouter();
@@ -33,9 +16,7 @@ export default function Documentation({ data, error }) {
         <div className={styles.container}>
             <h2>Documentation:</h2>
             <div className={styles.grid}>
-                <div className={styles.state}>
-                    {error ? error : <div dangerouslySetInnerHTML={{ __html: data }} />}
-                </div>
+                <iframe className={styles.state} src={`https://docs.google.com/document/d/e/${process.env.GOOGLE_DOCS_EMBED_ID}/pub?embedded=true`} />
             </div>
             <br />
             <div className={styles.grid}>
