@@ -122,9 +122,14 @@ export default async function setNewWeekApi(now: moment.Moment = moment()) {
                 const summary = item?.summary;
                 if (summary) {
                     const start = item.start?.dateTime || item.start?.date;
+                    const startDay = moment(start).day();
+                    // Exclude Sat & Sun
+                    if (startDay === 0 || startDay === 6) {
+                        continue;
+                    }
                     const end = item.end?.dateTime || item.end?.date;
-                    const isHalfDay = moment(start).diff(end, 'day') !== 1 ? true : false;
-                    events.set(moment(start).day(), { summary, isHalfDay });
+                    const isHalfDay = moment(start).diff(end, 'day') === 0 ? true : false;
+                    events.set(startDay, { summary, isHalfDay });
                 }
             }
         }
@@ -133,14 +138,19 @@ export default async function setNewWeekApi(now: moment.Moment = moment()) {
                 const summary = item.summary;
                 if (summary) {
                     const start = item.start?.dateTime || item.start?.date;
-                    events.set(moment(start).day(), { summary, isHalfDay: false });
+                    const startDay = moment(start).day();
+                    // Exclude Sat & Sun
+                    if (startDay === 0 || startDay === 6) {
+                        continue;
+                    }
+                    events.set(startDay, { summary, isHalfDay: false });
                 }
             }
         }
         if (events.size <= 0) {
             return;
         }
-
+        
         await sheets.spreadsheets.batchUpdate({
             spreadsheetId,
             requestBody: {
