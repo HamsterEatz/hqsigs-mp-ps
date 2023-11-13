@@ -156,18 +156,19 @@ export default async function setNewWeekApi(now: moment.Moment = moment()) {
             requestBody: {
                 requests: Array.from(events.keys()).map((k) => ({
                     repeatCell: {
-                        fields: 'userEnteredFormat(backgroundColor)',
+                        fields: 'userEnteredFormat(backgroundColor),note',
                         range: {
                             sheetId: paradeStateSheet.properties?.sheetId,
                             startRowIndex: 1,
                             startColumnIndex: (Number(k) * 2) + (events.get(k)?.isHalfDay ? 3 : 2),
-                            endColumnIndex: (Number(k) * 2) + 4
+                            endColumnIndex: (Number(k) * 2) + 4,
                         },
                         cell: {
                             userEnteredFormat: {
-                                backgroundColor: { red: 1, green: 38, blue: 153 }
-                            }
-                        }
+                                backgroundColor: { red: 1, green: 38, blue: 153 },
+                            },
+                            note: events.get(k)?.summary,
+                        },
                     }
                 }))
             }
